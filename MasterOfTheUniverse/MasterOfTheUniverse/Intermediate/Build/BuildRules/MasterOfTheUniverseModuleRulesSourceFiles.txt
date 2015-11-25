@@ -467,8 +467,8 @@ C:\Program Files\Epic Games\4.10\Engine\Plugins\ScriptGeneratorPlugin\Source\Scr
 C:\Program Files\Epic Games\4.10\Engine\Plugins\ScriptPlugin\Source\ScriptEditorPlugin\ScriptEditorPlugin.Build.cs
 C:\Program Files\Epic Games\4.10\Engine\Plugins\ScriptPlugin\Source\ScriptPlugin\ScriptPlugin.Build.cs
 C:\Program Files\Epic Games\4.10\Engine\Plugins\Slate\SlateRemote\Source\SlateRemote\SlateRemote.Build.cs
-E:\Unreal Workspace\MAsterOfTeUniverse\MAsterOfTeUniverse\MasterOfTheUniverse\MasterOfTheUniverse\Source\MasterOfTheUniverse\MasterOfTheUniverse.Build.cs
+C:\Users\mfrei\Documents\MasterofUnivers\MAsterOfTeUniverse\MasterOfTheUniverse\MasterOfTheUniverse\Source\MasterOfTheUniverse\MasterOfTheUniverse.Build.cs
 C:\Program Files\Epic Games\4.10\Engine\Source\UE4Editor.Target.cs
 C:\Program Files\Epic Games\4.10\Engine\Source\UE4Game.Target.cs
-E:\Unreal Workspace\MAsterOfTeUniverse\MAsterOfTeUniverse\MasterOfTheUniverse\MasterOfTheUniverse\Source\MasterOfTheUniverse.Target.cs
-E:\Unreal Workspace\MAsterOfTeUniverse\MAsterOfTeUniverse\MasterOfTheUniverse\MasterOfTheUniverse\Source\MasterOfTheUniverseEditor.Target.cs
+C:\Users\mfrei\Documents\MasterofUnivers\MAsterOfTeUniverse\MasterOfTheUniverse\MasterOfTheUniverse\Source\MasterOfTheUniverse.Target.cs
+C:\Users\mfrei\Documents\MasterofUnivers\MAsterOfTeUniverse\MasterOfTheUniverse\MasterOfTheUniverse\Source\MasterOfTheUniverseEditor.Target.cs
