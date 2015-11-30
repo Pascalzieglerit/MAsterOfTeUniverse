@@ -30,20 +30,24 @@ void UGodlyHandsBehavior::BeginPlay()
 void UGodlyHandsBehavior::TickComponent( float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction )
 {
 	Super::TickComponent( DeltaTime, TickType, ThisTickFunction );
-
+	//UE_LOG(LogTemp, Warning, TEXT("TICK"));
 	
 
 	// ...
 }
 
-void UGodlyHandsBehavior::onGodlyGrab(IMotionController hand)
+void UGodlyHandsBehavior::onGodlyGrab(class UActorComponent* parent, bool grabbingButtonPressed)
 {
-	if (true)
+	UE_LOG(LogTemp, Warning, TEXT("GRAB"));
+	if (!grabbingButtonPressed)
 	{
-		return
+		return;
 	}
 
+	
+	
+
 	//TODO:
-	//check out all overlapping objects
-	//take the first one and change its parent to this hand
+	//check out all overlapping objects of parent
+	//take the first one and change its parent to parent
 }

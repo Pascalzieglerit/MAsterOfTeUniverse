@@ -2,6 +2,8 @@
 
 #pragma once
 
+
+#include <iostream>
 #include "Components/ActorComponent.h"
 #include "GodlyHandsBehavior.generated.h"
 
@@ -25,6 +27,6 @@ public:
 	virtual void TickComponent( float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction ) override;
 
 	UFUNCTION(BlueprintCallable, Category = "Grabbing")
-		void onGodlyGrab(IMotionController hand);
+	void onGodlyGrab(class UActorComponent* input, bool grabbingButtonPressed);
 	
 };
