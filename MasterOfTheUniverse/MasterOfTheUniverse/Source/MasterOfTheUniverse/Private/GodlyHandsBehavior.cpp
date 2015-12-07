@@ -11,7 +11,7 @@ UGodlyHandsBehavior::UGodlyHandsBehavior()
 	// off to improve performance if you don't need them.
 	bWantsBeginPlay = true;
 	PrimaryComponentTick.bCanEverTick = true;
-
+	turnObject = false;
 	// ...
 }
 
@@ -32,22 +32,91 @@ void UGodlyHandsBehavior::TickComponent( float DeltaTime, ELevelTick TickType, F
 	Super::TickComponent( DeltaTime, TickType, ThisTickFunction );
 	//UE_LOG(LogTemp, Warning, TEXT("TICK"));
 	
+	//update the object to turn
+	if (this->turnObject)
+	{
+		float pitch = this->rotatingHand->GetComponentLocation().Z - this->relativePositionAtBeginOfRotate.Z;
+		float roll = 0;
+		float yaw = this->rotatingHand->GetComponentLocation().Y - this->relativePositionAtBeginOfRotate.Y;
+		FRotator rotation = FRotator(pitch * DeltaTime, roll * DeltaTime, yaw * DeltaTime);
+		this->ObjectToTurn->AddActorLocalRotation(rotation);
+	}
 
 	// ...
 }
 
-void UGodlyHandsBehavior::onGodlyGrab(class UActorComponent* parent, bool grabbingButtonPressed)
+
+
+bool UGodlyHandsBehavior::onGodlyGrab(class UPrimitiveComponent* input)
 {
+
 	UE_LOG(LogTemp, Warning, TEXT("GRAB"));
-	if (!grabbingButtonPressed)
+	
+	//hand not empty => empty it
+	if (input->GetNumChildrenComponents() > 0)
 	{
-		return;
+		TArray< USceneComponent * > children;
+		input->GetChildrenComponents(false, children);
+		for (int i = 0; i < children.Num(); i++)
+		{
+			children[i]->DetachFromParent(true);
+		}
+		return false;
 	}
 
-	
-	
+	TArray< AActor * > overlappingActors = TArray< AActor * >();
+	input->GetOverlappingActors(overlappingActors);
 
-	//TODO:
-	//check out all overlapping objects of parent
-	//take the first one and change its parent to parent
+	//search for an object that is pickupable
+	for (int i = 0; i < overlappingActors.Num(); i++)
+	{
+		if (overlappingActors[i]->ActorHasTag(FName(TEXT("PickUpByGod"))))
+		{
+			AActor* pickedUpObject = overlappingActors[i];
+			const FTransform moep = pickedUpObject->GetTransform();
+			pickedUpObject->AttachRootComponentTo(input);
+			pickedUpObject->SetActorTransform(moep);
+			pickedUpObject->SetActorLocation(input->GetComponentLocation());
+			//ONLY PICK UP ONE OBJECT! remove thie return if you want to pick up all ovelrapping objects
+			return true;
+		}
+
+	}
+
+	return false;
+}
+
+
+bool UGodlyHandsBehavior::grabToRotate(class UPrimitiveComponent* input)
+{
+	//check wether there is another hand turning an object
+	if (this->turnObject)
+	{
+		return false;
+	}
+
+	TArray< AActor * > overlappingActors = TArray< AActor * >();
+	input->GetOverlappingActors(overlappingActors);
+
+	//search for an object that is protatable
+	for (int i = 0; i < overlappingActors.Num(); i++)
+	{
+		if (overlappingActors[i]->ActorHasTag(FName(TEXT("RotatableByGod"))))
+		{
+			this->ObjectToTurn = overlappingActors[i];
+			this->turnObject = true;
+			this->rotatingHand = input;
+			this->relativePositionAtBeginOfRotate = input->GetComponentLocation();
+			return true;
+		}
+	}
+
+	return false;
+}
+
+bool UGodlyHandsBehavior::endRotating()
+{
+	bool ret = this->turnObject;
+	this->turnObject = false;
+	return ret;
 }
