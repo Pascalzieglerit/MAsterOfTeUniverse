@@ -46,10 +46,30 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Grabbing")
 	bool endRotating();
 
+	//returns a normalized vector which points from the userPosition towards the zoomDirection.
+	UFUNCTION(BlueprintCallable, Category = "Zoom Gesture")
+	FVector initializeZoomGesture(class UPrimitiveComponent* inputLeft, class UPrimitiveComponent* inputRight, FVector userPosition);
+
+
+	//returns a vector which points from the userPosition towards the zoomDirection (call initializeZoomGesture first). the length of the vector is the zoom amount.
+	UFUNCTION(BlueprintCallable, Category = "Zoom Gesture")
+	FVector getZoomAmount();
+
+
+
+
 private:
 	//vector used for computing the rotation quaternion each frame
 	FVector oldGrabbingToTurnVector;
 	//the rotation quaternion if god is rotationg something
 	FQuat rotationQuaternion;
+	//the left hand which is used zooming
+	UPrimitiveComponent* leftZoomHand;
+	//the right hand which is used zooming
+	UPrimitiveComponent* rightZoomHand;
+	//the position of the user zooming
+	FVector zoomUserPosition;
+	//used to fast check during zoomUserPosition
+	bool zoomInitalized;
 	
 };

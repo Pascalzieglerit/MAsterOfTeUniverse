@@ -12,6 +12,7 @@ UGodlyHandsBehavior::UGodlyHandsBehavior()
 	bWantsBeginPlay = true;
 	PrimaryComponentTick.bCanEverTick = true;
 	turnObject = false;
+	this->zoomInitalized = false;
 	// ...
 }
 
@@ -78,7 +79,6 @@ void UGodlyHandsBehavior::TickComponent( float DeltaTime, ELevelTick TickType, F
 
 	// ...
 }
-
 
 
 bool UGodlyHandsBehavior::onGodlyGrab(class UPrimitiveComponent* input)
@@ -152,5 +152,32 @@ bool UGodlyHandsBehavior::endRotating()
 {
 	bool ret = this->turnObject;
 	this->turnObject = false;
+	return ret;
+}
+
+FVector  UGodlyHandsBehavior::initializeZoomGesture(class UPrimitiveComponent* inputLeft, class UPrimitiveComponent* inputRight, FVector userPosition)
+{
+	//TODO
+	this->leftZoomHand = inputLeft;
+	this->rightZoomHand = inputRight;
+	this->zoomUserPosition = userPosition;
+	FVector middlePoint = 0.5 * (inputRight->GetComponentLocation() + inputLeft->GetComponentLocation());
+	FVector ret = (middlePoint - userPosition);
+	ret.Normalize();
+	this->zoomInitalized = true;
+	return ret;
+}
+
+FVector  UGodlyHandsBehavior::getZoomAmount()
+{
+	if (this->zoomInitalized == false)
+	{
+		return FVector(0, 0, 0);
+	}
+	
+	FVector middlePoint = 0.5 * (this->leftZoomHand->GetComponentLocation() + this->rightZoomHand->GetComponentLocation());
+	FVector ret = (middlePoint - this->zoomUserPosition);
+	ret.Normalize();
+	ret = ret * (this->leftZoomHand->GetComponentLocation() - this->rightZoomHand->GetComponentLocation()).Size();
 	return ret;
 }
