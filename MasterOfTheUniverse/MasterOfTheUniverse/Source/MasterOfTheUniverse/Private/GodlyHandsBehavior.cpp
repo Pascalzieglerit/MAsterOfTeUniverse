@@ -21,6 +21,8 @@ void UGodlyHandsBehavior::BeginPlay()
 {
 	Super::BeginPlay();
 
+	this->rotationQuaternion = FQuat(0, 0, 0, 0);
+
 	// ...
 	
 }
@@ -35,12 +37,44 @@ void UGodlyHandsBehavior::TickComponent( float DeltaTime, ELevelTick TickType, F
 	//update the object to turn
 	if (this->turnObject)
 	{
-		float pitch = this->rotatingHand->GetComponentLocation().Z - this->relativePositionAtBeginOfRotate.Z;
-		float roll = 0;
-		float yaw = this->rotatingHand->GetComponentLocation().Y - this->relativePositionAtBeginOfRotate.Y;
-		FRotator rotation = FRotator(pitch * DeltaTime, roll * DeltaTime, yaw * DeltaTime);
-		this->ObjectToTurn->AddActorLocalRotation(rotation);
+		// OLD DEMO CODE
+		//float pitch = this->rotatingHand->GetComponentLocation().Z - this->relativePositionAtBeginOfRotate.Z;
+		//float roll = 0;
+		//float yaw = this->rotatingHand->GetComponentLocation().Y - this->relativePositionAtBeginOfRotate.Y;
+		//FRotator rotation = FRotator(pitch * DeltaTime, roll * DeltaTime, yaw * DeltaTime);
+		//this->ObjectToTurn->AddActorLocalRotation(rotation);
+
+
+		//this->ObjectToTurn->AddActorWorldRotation();
+		
+
+		FVector newGrabbingToTurnVector = (this->rotatingHand->GetComponentLocation() - this->ObjectToTurn->GetActorLocation());
+		newGrabbingToTurnVector.Normalize();
+
+		FVector rotationAxis = FVector::CrossProduct(oldGrabbingToTurnVector, newGrabbingToTurnVector);
+		rotationAxis.Normalize();
+
+		//true because I normalized first
+		float CosOfRotationAngle = FVector::DotProduct(oldGrabbingToTurnVector, newGrabbingToTurnVector);
+
+		this->rotationQuaternion = FQuat(rotationAxis, acos(CosOfRotationAngle) * 5);
+
+
+		this->ObjectToTurn->AddActorWorldRotation(rotationQuaternion);
+
+
+		this->oldGrabbingToTurnVector = newGrabbingToTurnVector;
+
 	}
+	else
+	{
+		//if the user lets go the rotation will be applied continuesly
+		if (this->ObjectToTurn != NULL)
+		{
+			this->ObjectToTurn->AddActorWorldRotation(this->rotationQuaternion);
+		}
+	}
+	
 
 	// ...
 }

@@ -46,5 +46,10 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Grabbing")
 	bool endRotating();
 
+private:
+	//vector used for computing the rotation quaternion each frame
+	FVector oldGrabbingToTurnVector;
+	//the rotation quaternion if god is rotationg something
+	FQuat rotationQuaternion;
 	
 };
