@@ -55,6 +55,8 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Zoom Gesture")
 	FVector getZoomAmount();
 
+	//hallo markus
+
 
 
 
