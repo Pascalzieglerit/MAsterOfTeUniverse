@@ -87,18 +87,6 @@ bool UGodlyHandsBehavior::onGodlyGrab(class UPrimitiveComponent* input)
 {
 
 	UE_LOG(LogTemp, Warning, TEXT("GRAB"));
-	
-	//hand not empty => empty it
-	if (input->GetNumChildrenComponents() > 0)
-	{
-		TArray< USceneComponent * > children;
-		input->GetChildrenComponents(false, children);
-		for (int i = 0; i < children.Num(); i++)
-		{
-			children[i]->DetachFromParent(true);
-		}
-		return false;
-	}
 
 	TArray< AActor * > overlappingActors = TArray< AActor * >();
 	input->GetOverlappingActors(overlappingActors);
@@ -110,6 +98,7 @@ bool UGodlyHandsBehavior::onGodlyGrab(class UPrimitiveComponent* input)
 		{
 			AActor* pickedUpObject = overlappingActors[i];
 			const FTransform moep = pickedUpObject->GetTransform();
+			//pickedUpObject->DetachRootComponentFromParent
 			pickedUpObject->AttachRootComponentTo(input);
 			pickedUpObject->SetActorTransform(moep);
 			pickedUpObject->SetActorLocation(input->GetComponentLocation());
@@ -122,6 +111,25 @@ bool UGodlyHandsBehavior::onGodlyGrab(class UPrimitiveComponent* input)
 	return false;
 }
 
+bool UGodlyHandsBehavior::onGodlyLetGo(class UPrimitiveComponent* input)
+{
+
+	UE_LOG(LogTemp, Warning, TEXT("LET GO"));
+
+	//hand not empty => empty it
+	if (input->GetNumChildrenComponents() > 0)
+	{
+		TArray< USceneComponent * > children;
+		input->GetChildrenComponents(false, children);
+		for (int i = 0; i < children.Num(); i++)
+		{
+			children[i]->DetachFromParent(true);
+		}
+		return true;
+	}
+
+	return false;
+}
 
 bool UGodlyHandsBehavior::grabToRotate(class UPrimitiveComponent* input)
 {
@@ -142,7 +150,7 @@ bool UGodlyHandsBehavior::grabToRotate(class UPrimitiveComponent* input)
 			this->ObjectToTurn = overlappingActors[i];
 			this->turnObject = true;
 			this->rotatingHand = input;
-			this->relativePositionAtBeginOfRotate = input->GetComponentLocation();
+			this->oldGrabbingToTurnVector = (this->rotatingHand->GetComponentLocation() - this->ObjectToTurn->GetActorLocation());
 			return true;
 		}
 	}

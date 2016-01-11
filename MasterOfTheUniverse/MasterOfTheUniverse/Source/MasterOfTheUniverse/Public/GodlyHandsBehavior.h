@@ -20,8 +20,7 @@ public:
 	AActor* ObjectToTurn;
 	bool turnObject;
 	UPrimitiveComponent* rotatingHand;
-	//when the user stars to rotate a planet (or any object) this position will be set. rel from this position the rotating hand will control the rotation
-	FVector relativePositionAtBeginOfRotate;
+
 
 
 
@@ -34,9 +33,13 @@ public:
 	// Called every frame
 	virtual void TickComponent( float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
-	//returns true if something was picked up. if the hand was full allready it will be emptied and nothing will be picked up.
+	//returns true if something was picked up.
 	UFUNCTION(BlueprintCallable, Category = "Grabbing")
 	bool onGodlyGrab(class UPrimitiveComponent* input);
+
+	//returns true if something was let go. if the hand was full it will be emptied and return true.
+	UFUNCTION(BlueprintCallable, Category = "Grabbing")
+	bool onGodlyLetGo(class UPrimitiveComponent* input);
 
 	//returns true if something was grabbed to rotate
 	UFUNCTION(BlueprintCallable, Category = "Grabbing")
