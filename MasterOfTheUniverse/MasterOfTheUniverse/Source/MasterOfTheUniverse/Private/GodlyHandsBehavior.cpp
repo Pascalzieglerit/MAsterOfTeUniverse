@@ -6,6 +6,7 @@
 #include "GodlyHandsBehavior.h"
 
 
+
 // Sets default values for this component's properties
 UGodlyHandsBehavior::UGodlyHandsBehavior()
 {
@@ -38,6 +39,37 @@ void UGodlyHandsBehavior::TickComponent( float DeltaTime, ELevelTick TickType, F
 	//UE_LOG(LogTemp, Warning, TEXT("TICK"));
 	
 	//update the object to turn
+	this->tickTurnObject();
+	
+	//update the object to zoom
+	this->tickZoomObject();
+
+	// ...
+}
+
+void UGodlyHandsBehavior::tickZoomObject()
+{
+	if (!this->zoomInitalized)
+	{
+		return;
+	}
+
+	
+
+	float newZoomAmount = this->getZoomAmount().Size();
+	float actualZoomAmount = (newZoomAmount - this->oldZoomAmount)*0.005;
+	FVector newScale = this->oldZoomScale + actualZoomAmount;
+	if (newScale.X * this->oldZoomScale.X < 0 || newScale.Y * this->oldZoomScale.Y < 0 || newScale.Z * this->oldZoomScale.Z < 0)
+	{
+		return;
+	}
+	this->zoomedObject->SetActorRelativeScale3D(newScale);
+
+}
+
+
+void UGodlyHandsBehavior::tickTurnObject()
+{
 	if (this->turnObject)
 	{
 		// OLD DEMO CODE
@@ -49,7 +81,7 @@ void UGodlyHandsBehavior::TickComponent( float DeltaTime, ELevelTick TickType, F
 
 
 		//this->ObjectToTurn->AddActorWorldRotation();
-		
+
 
 		FVector newGrabbingToTurnVector = (this->rotatingHand->GetComponentLocation() - this->ObjectToTurn->GetActorLocation());
 		newGrabbingToTurnVector.Normalize();
@@ -77,11 +109,7 @@ void UGodlyHandsBehavior::TickComponent( float DeltaTime, ELevelTick TickType, F
 			this->ObjectToTurn->AddActorWorldRotation(this->rotationQuaternion);
 		}
 	}
-	
-
-	// ...
 }
-
 
 bool UGodlyHandsBehavior::onGodlyGrab(class UPrimitiveComponent* input)
 {
@@ -139,18 +167,34 @@ bool UGodlyHandsBehavior::grabToRotate(class UPrimitiveComponent* input)
 		return false;
 	}
 
+	UE_LOG(LogTemp, Warning, TEXT("GRAB TO ROTATE"));
+
 	TArray< AActor * > overlappingActors = TArray< AActor * >();
 	input->GetOverlappingActors(overlappingActors);
-
-	//search for an object that is protatable
+	TArray< AActor * > overlappingActorsWithChildren;
 	for (int i = 0; i < overlappingActors.Num(); i++)
 	{
-		if (overlappingActors[i]->ActorHasTag(FName(TEXT("RotatableByGod"))))
+		overlappingActorsWithChildren.Add(overlappingActors[i]);
+		TArray< AActor * > children;
+		overlappingActors[i]->GetAttachedActors(children);
+		for (int j = 0; j < children.Num(); j++)
 		{
-			this->ObjectToTurn = overlappingActors[i];
+			overlappingActorsWithChildren.Add(children[j]);
+		}
+	}
+
+
+	//search for an object that is protatable
+	for (int i = 0; i < overlappingActorsWithChildren.Num(); i++)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("OVERLAP"));
+		if (overlappingActorsWithChildren[i]->ActorHasTag(FName(TEXT("RotatableByGod"))))
+		{
+			this->ObjectToTurn = overlappingActorsWithChildren[i];
 			this->turnObject = true;
 			this->rotatingHand = input;
 			this->oldGrabbingToTurnVector = (this->rotatingHand->GetComponentLocation() - this->ObjectToTurn->GetActorLocation());
+			UE_LOG(LogTemp, Warning, TEXT("ROTATE"));
 			return true;
 		}
 	}
@@ -170,13 +214,39 @@ FVector  UGodlyHandsBehavior::initializeZoomGesture(class UPrimitiveComponent* i
 	//TODO
 	this->leftZoomHand = inputLeft;
 	this->rightZoomHand = inputRight;
+	this->oldZoomAmount = (inputLeft->GetComponentLocation() - inputRight->GetComponentLocation()).Size();
 	this->zoomUserPosition = userPosition;
 	FVector middlePoint = 0.5 * (inputRight->GetComponentLocation() + inputLeft->GetComponentLocation());
 	FVector ret = (middlePoint - userPosition);
 	ret.Normalize();
-	this->zoomInitalized = true;
+	
+	
+	FVector endPoint = middlePoint + ret * 99999;
+	FCollisionQueryParams traceParams(FName(TEXT("VictoreCore Trace")), true, this->GetOwner());
+	traceParams.bTraceComplex = true;
+	//TraceParams.bTraceAsyncScene = true;
+	//Re-initialize hit info
+	FHitResult rayCastResult(ForceInit);
+
+
+
+
+	bool rayCastWorked = this->GetWorld()->LineTraceSingle(rayCastResult,middlePoint - ret * 9999,endPoint, ECC_Visibility , traceParams);
+
+	if (rayCastWorked && rayCastResult.GetActor()->ActorHasTag(FName(TEXT("ZoomableByGod"))))
+	{
+		this->zoomedObject = rayCastResult.GetActor();
+		TArray<AActor*> children;
+		this->zoomedObject->GetAttachedActors(children);
+		this->zoomedObject = children[0];
+		this->oldZoomScale = this->zoomedObject->GetActorRelativeScale3D();
+		this->zoomInitalized = true;
+	}
+
 	return ret;
 }
+
+
 
 FVector  UGodlyHandsBehavior::getZoomAmount()
 {
@@ -190,4 +260,8 @@ FVector  UGodlyHandsBehavior::getZoomAmount()
 	ret.Normalize();
 	ret = ret * (this->leftZoomHand->GetComponentLocation() - this->rightZoomHand->GetComponentLocation()).Size();
 	return ret;
+}
+void UGodlyHandsBehavior::endZoomGesture()
+{
+	this->zoomInitalized = false;
 }

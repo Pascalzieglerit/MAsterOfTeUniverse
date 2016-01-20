@@ -53,6 +53,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Zoom Gesture")
 	FVector initializeZoomGesture(class UPrimitiveComponent* inputLeft, class UPrimitiveComponent* inputRight, FVector userPosition);
 
+	//ends the zooming gesture
+	UFUNCTION(BlueprintCallable, Category = "Zoom Gesture")
+	void endZoomGesture();
 
 	//returns a vector which points from the userPosition towards the zoomDirection (call initializeZoomGesture first). the length of the vector is the zoom amount.
 	UFUNCTION(BlueprintCallable, Category = "Zoom Gesture")
@@ -76,5 +79,16 @@ private:
 	FVector zoomUserPosition;
 	//used to fast check during zoomUserPosition
 	bool zoomInitalized;
+	//the object that is zoomed
+	AActor* zoomedObject;
+	//float used to compute the rel zoom the zoomed object
+	float oldZoomAmount;
+	//original scale of object before zooming
+	FVector oldZoomScale;
+
+	//update the object to turn
+	void tickTurnObject();
+	//update the object to zoom
+	void tickZoomObject();
 	
 };
