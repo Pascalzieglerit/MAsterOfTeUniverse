@@ -231,7 +231,7 @@ FVector  UGodlyHandsBehavior::initializeZoomGesture(class UPrimitiveComponent* i
 
 
 
-	bool rayCastWorked = this->GetWorld()->LineTraceSingle(rayCastResult,middlePoint - ret * 9999,endPoint, ECC_Visibility , traceParams);
+	bool rayCastWorked = this->GetWorld()->LineTraceSingle(rayCastResult,middlePoint - ret * 9999,endPoint, ECC_GameTraceChannel1, traceParams);
 
 	if (rayCastWorked && rayCastResult.GetActor()->ActorHasTag(FName(TEXT("ZoomableByGod"))))
 	{
