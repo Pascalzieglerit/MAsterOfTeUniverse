@@ -25,5 +25,6 @@ public:
 	//it depends on the camera orientation
 	//ths function shoots a camera ray. the hitpoint will be taken and tranformed towards the center of the planet until it reaches an blocking object with tag "Floor".
 	UFUNCTION(BlueprintCallable, Category = "Earth Walking")
-	FVector getWalkingPosition(bool& positionFindingWorked, FVector PlanetCenterWorldPoisition, FVector CameraPosition, FVector CameraForward);
+	FVector getWalkingPosition(bool& positionFindingWorked, FVector PlanetCenterWorldPoisition, FVector CameraPosition, FVector CameraForward, float maximalWalkingDistance);
+
 };
