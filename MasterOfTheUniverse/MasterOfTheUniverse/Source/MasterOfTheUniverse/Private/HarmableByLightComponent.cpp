@@ -37,5 +37,24 @@ void UHarmableByLightComponent::TickComponent( float DeltaTime, ELevelTick TickT
 bool UHarmableByLightComponent::hitByLightSource(float& distance, AActor* lightsource)
 {
 	//TODO
-	return true;
+
+	FCollisionQueryParams traceParams(FName(TEXT("Finding Light Source Trace")), true, this->GetOwner());
+	traceParams.bTraceComplex = true;
+	//TraceParams.bTraceAsyncScene = true;
+	//Re-initialize hit info
+	FHitResult firstRayCastResult(ForceInit);
+
+	bool rayCastWorked = this->GetWorld()->LineTraceSingle(firstRayCastResult, this->GetOwner()->GetActorLocation(), lightsource->GetActorLocation(), ECC_Visibility, traceParams);
+
+	float distanceToLightSource = (this->GetOwner()->GetActorLocation() - lightsource->GetActorLocation()).Size();
+
+	if (rayCastWorked)
+	{
+		distance = firstRayCastResult.Distance;
+		//if nothing was hit but the lightsource thats a hit still.
+		return (distanceToLightSource >= distance);
+	}
+	//nothing was hit. not even the light source.
+	distance = distanceToLightSource;
+	return false;
 }
