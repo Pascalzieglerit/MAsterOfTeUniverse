@@ -1,0 +1,20 @@
+1. Charakter auf dem Planeten sollte korrekt ausgerichtet werden. 
+
+2. Charakter Locomotio auf dem Planeten mit "fahrt" zum ausgewählten Punkt auf der 
+    Planetenoberfläche
+
+3.Pickup Objects sollten beim Ablegen wieder Child vom Planeten werden.
+
+4. Objekte sollten beim greifen nicht in die Hand srpingen da damit ein sauberes bauen schwer möglich ist. Wenn es geht an dem Punkt an dem man greift.
+
+5. Beim Rotieren eventuell numerische Fehler da stocken.
+
+6. Harmable by light False zurück geben wenn eine gewisse Zeit noch nicht abgelaufen ist seit dem     letzten Verletzen 
+
+7. Hit by light source; Eingabe Liste statt Actor zum Hinzufügen neuer Lichtquellen die Schaden      verursachen.
+
+8. Hit by light source Eingabe boole Variable aufsumieren der Lightsources 1 oder 0 (zum testen ein und ausschaltbar)
+
+9. Planetwalker Gravity oder nicht Gravity 
+
+10. Jump Point etwas höher setzen 
