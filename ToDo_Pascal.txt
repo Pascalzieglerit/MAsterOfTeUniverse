@@ -4,10 +4,13 @@
     Planetenoberfläche
 
 3.Pickup Objects sollten beim Ablegen wieder Child vom Planeten werden.
+DONE
 
 4. Objekte sollten beim greifen nicht in die Hand srpingen da damit ein sauberes bauen schwer möglich ist. Wenn es geht an dem Punkt an dem man greift.
+DONE
 
 5. Beim Rotieren eventuell numerische Fehler da stocken.
+DONE (ich habd so gelassen da das stoppen vom rotieren so um einiges einfacher ist :))
 
 6. Harmable by light False zurück geben wenn eine gewisse Zeit noch nicht abgelaufen ist seit dem     letzten Verletzen 
 
