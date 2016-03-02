@@ -216,6 +216,13 @@ bool UGodlyHandsBehavior::endRotating()
 	return ret;
 }
 
+
+void UGodlyHandsBehavior::stopRotatingImmediately()
+{
+	this->turnObject = false;
+	this->ObjectToTurn = NULL;
+}
+
 FVector  UGodlyHandsBehavior::initializeZoomGesture(class UPrimitiveComponent* inputLeft, class UPrimitiveComponent* inputRight, FVector userPosition)
 {
 	//TODO

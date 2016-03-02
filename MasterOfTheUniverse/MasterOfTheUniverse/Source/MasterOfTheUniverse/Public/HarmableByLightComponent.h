@@ -26,4 +26,12 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Light Damage")
 	bool hitByLightSource(float& distance, AActor* lightsource);
 	
+
+	//this function checks if this component is lightened by any lightsource. returns the number of lightsources that do if sumUp true. If Sumup false then 0 (no lightsource) or 1 (min 1 lghtsource)  will be returned.
+	//TODO: take the distance (and a factor for intensity?) of the lightsources into account by using the inverse square law.
+	UFUNCTION(BlueprintCallable, Category = "Light Damage")
+	float hitByLightSources(TArray<AActor *> lightsources, bool sumUp);
+
+
+	
 };

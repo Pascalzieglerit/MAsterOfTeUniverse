@@ -58,3 +58,24 @@ bool UHarmableByLightComponent::hitByLightSource(float& distance, AActor* lights
 	distance = distanceToLightSource;
 	return false;
 }
+
+
+
+float UHarmableByLightComponent::hitByLightSources(TArray<AActor *> lightsources, bool sumUp)
+{
+	float distance = 0;
+	float ret = 0;
+	for (int i = 0; i < lightsources.Num(); i++)
+	{
+		if (this->hitByLightSource(distance, lightsources[i]))
+		{
+			ret++;
+			if (sumUp)
+			{
+				return ret;
+			}
+		}
+	}
+
+	return ret;
+}

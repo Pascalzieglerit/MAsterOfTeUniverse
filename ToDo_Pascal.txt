@@ -14,11 +14,15 @@ DONE
 DONE (ich habd so gelassen da das stoppen vom rotieren so um einiges einfacher ist :))
 
 6. Harmable by light False zurück geben wenn eine gewisse Zeit noch nicht abgelaufen ist seit dem     letzten Verletzen 
+DONE funktionalität so schon bereits implementiert im blueprint. würde gegen die intuitive nutzung der funktion sprechen also skip.
 
 7. Hit by light source; Eingabe Liste statt Actor zum Hinzufügen neuer Lichtquellen die Schaden      verursachen.
+DONE neue methode: HitBy LightSources (mit s) iteriert hit by light source über eine liste von light sources.
 
 8. Hit by light source Eingabe boole Variable aufsumieren der Lightsources 1 oder 0 (zum testen ein und ausschaltbar)
+DONE
 
 9. Planetwalker Gravity oder nicht Gravity 
 
-10. Jump Point etwas höher setzen 
+10. Jump Point etwas höher setzen
+DONE nicht nötig wenn einfach das mesh höher gesetzt wird im earthwalker

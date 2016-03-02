@@ -50,6 +50,10 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Grabbing")
 	bool endRotating();
 
+	//stops Rotating Immediately. Even when the object was let go.
+	UFUNCTION(BlueprintCallable, Category = "Grabbing")
+	void stopRotatingImmediately();
+
 	//returns a normalized vector which points from the userPosition towards the zoomDirection.
 	UFUNCTION(BlueprintCallable, Category = "Zoom Gesture")
 	FVector initializeZoomGesture(class UPrimitiveComponent* inputLeft, class UPrimitiveComponent* inputRight, FVector userPosition);
