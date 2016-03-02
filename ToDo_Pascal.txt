@@ -2,6 +2,7 @@
 
 2. Charakter Locomotio auf dem Planeten mit "fahrt" zum ausgewählten Punkt auf der 
     Planetenoberfläche
+DONE
 
 3.Pickup Objects sollten beim Ablegen wieder Child vom Planeten werden.
 DONE
