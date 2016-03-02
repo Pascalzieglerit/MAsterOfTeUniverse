@@ -129,7 +129,7 @@ bool UGodlyHandsBehavior::onGodlyGrab(class UPrimitiveComponent* input)
 			//pickedUpObject->DetachRootComponentFromParent
 			pickedUpObject->AttachRootComponentTo(input);
 			pickedUpObject->SetActorTransform(moep);
-			pickedUpObject->SetActorLocation(input->GetComponentLocation());
+			//pickedUpObject->SetActorLocation(input->GetComponentLocation());
 			//ONLY PICK UP ONE OBJECT! remove thie return if you want to pick up all ovelrapping objects
 			return true;
 		}
@@ -139,7 +139,7 @@ bool UGodlyHandsBehavior::onGodlyGrab(class UPrimitiveComponent* input)
 	return false;
 }
 
-bool UGodlyHandsBehavior::onGodlyLetGo(class UPrimitiveComponent* input)
+bool UGodlyHandsBehavior::onGodlyLetGo(class UPrimitiveComponent* input, USceneComponent* newParent)
 {
 
 	UE_LOG(LogTemp, Warning, TEXT("LET GO"));
@@ -151,7 +151,14 @@ bool UGodlyHandsBehavior::onGodlyLetGo(class UPrimitiveComponent* input)
 		input->GetChildrenComponents(false, children);
 		for (int i = 0; i < children.Num(); i++)
 		{
+			FVector oldPos = children[i]->GetComponentLocation();
+			FQuat oldRotation = children[i]->GetComponentQuat();
+			FVector oldScale = children[i]->GetComponentScale();
 			children[i]->DetachFromParent(true);
+			children[i]->AttachTo(newParent);
+			children[i]->SetWorldLocationAndRotation(oldPos,oldRotation);
+			children[i]->SetWorldScale3D(oldScale);
+			//children[i]->AttachParent
 		}
 		return true;
 	}
@@ -261,6 +268,7 @@ FVector  UGodlyHandsBehavior::getZoomAmount()
 	ret = ret * (this->leftZoomHand->GetComponentLocation() - this->rightZoomHand->GetComponentLocation()).Size();
 	return ret;
 }
+
 void UGodlyHandsBehavior::endZoomGesture()
 {
 	this->zoomInitalized = false;

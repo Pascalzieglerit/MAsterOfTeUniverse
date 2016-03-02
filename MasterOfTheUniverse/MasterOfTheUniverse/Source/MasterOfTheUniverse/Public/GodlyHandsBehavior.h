@@ -38,8 +38,9 @@ public:
 	bool onGodlyGrab(class UPrimitiveComponent* input);
 
 	//returns true if something was let go. if the hand was full it will be emptied and return true.
+	//input is the hand which should lose all children, newParent the object where the objects should be dropped to.
 	UFUNCTION(BlueprintCallable, Category = "Grabbing")
-	bool onGodlyLetGo(class UPrimitiveComponent* input);
+	bool onGodlyLetGo(class UPrimitiveComponent* input, USceneComponent* newParent);
 
 	//returns true if something was grabbed to rotate
 	UFUNCTION(BlueprintCallable, Category = "Grabbing")
